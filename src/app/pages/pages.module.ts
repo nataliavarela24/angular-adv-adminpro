@@ -10,6 +10,8 @@ import { SharedModule } from '../shared/shared.module';
 import { ComponentsModule } from '../components/components.module';
 import { PagesComponent } from './pages.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { PromesasComponent } from './promesas/promesas.component';
+import { RxjsComponent } from './rxjs/rxjs.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
     DashboardComponent,
     ProgressComponent,
     Grafica1Component,
-    AccountSettingsComponent
+    AccountSettingsComponent,
+    PromesasComponent,
+    RxjsComponent,
   ],
   imports: [
     CommonModule,
@@ -32,7 +36,9 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
     DashboardComponent,
     ProgressComponent,
     Grafica1Component,
-    AccountSettingsComponent
+    AccountSettingsComponent,
+    PromesasComponent,
+    RxjsComponent
   ]
 })
 export class PagesModule { }
