@@ -19,8 +19,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   
     public loginForm =this.fb.nonNullable.group({
       email:[localStorage.getItem('email')|| '',[Validators.required, Validators.email]],
-      password:['',Validators.required],
-      remember:[false]
+      password:['',Validators.required]
     
     });
 
@@ -62,27 +61,32 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
   
 
-  login(){
+  login() {
+  console.log("LOGIN COMPONENT EJECUTADO");
 
-    this.usuarioService.login( this.loginForm.getRawValue())
-    .subscribe( resp => {
-      
-       if( this.loginForm.get('remember')?.getRawValue()){
-        localStorage.setItem('email',this.loginForm.get('email')?.getRawValue());
-       }else {
+  const { email, password } = this.loginForm.getRawValue();
 
-        localStorage.removeItem('email');
+  this.usuarioService.login({ email, password })
+    .subscribe({
+      next: (resp) => {
+        console.log("RESPUESTA LOGIN:", resp);
 
-       }
-       this.router.navigateByUrl('/');
+        /* if (remember) {
+          localStorage.setItem('email', email);
+        } else {
+          localStorage.removeItem('email');
+        }
+ */
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        console.log("ERROR LOGIN:", err);
+        Swal.fire('Error', err.error.msg, 'error');
+      }
+    });
+}
 
-    },(err)=>{
-          //si sucede un error 
-    
-          Swal.fire('Error', err.error.msg, 'error');
-        });
 
-  }
 
 
 }

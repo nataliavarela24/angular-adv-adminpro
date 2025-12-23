@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
+import { Usuario } from '../../models/usuario.model';
 
 @Component({
   selector: 'app-header',
@@ -7,16 +8,20 @@ import { UsuarioService } from '../../services/usuario.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit {
- 
-  constructor( private usuarioService: UsuarioService ){
 
-  }
+  public imgUrl: string = '';
+    public usuario!: Usuario;
 
-  ngOnInit():void{
-    
-  }
+  constructor(public usuarioService: UsuarioService) { }
 
-  logout(){
+  ngOnInit(): void {
+  setTimeout(() => {
+    this.usuario = this.usuarioService.usuario;
+  }, 0);
+}
+
+
+  logout() {
     this.usuarioService.logout();
   }
 }
