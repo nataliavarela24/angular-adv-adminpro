@@ -13,6 +13,8 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { HospitalesComponent } from './mantenimientos/hospitales/hospitales.component';
+import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component';
 
 
 @NgModule({
@@ -25,6 +27,8 @@ import { PerfilComponent } from './perfil/perfil.component';
     PromesasComponent,
     RxjsComponent,
     PerfilComponent,
+    HospitalesComponent,
+    UsuariosComponent
   ],
   imports: [
     CommonModule,
@@ -33,8 +37,8 @@ import { PerfilComponent } from './perfil/perfil.component';
     FormsModule,
     ComponentsModule,
     ReactiveFormsModule
-],
-  exports: [  
+  ],
+  exports: [
     PagesComponent,
     DashboardComponent,
     ProgressComponent,
@@ -42,7 +46,10 @@ import { PerfilComponent } from './perfil/perfil.component';
     AccountSettingsComponent,
     PromesasComponent,
     RxjsComponent,
-    PerfilComponent
+    PerfilComponent,
+    HospitalesComponent,
+    UsuariosComponent
+
   ]
 })
 export class PagesModule { }

@@ -73,11 +73,6 @@ export class PerfilComponent  implements OnInit {
   }
 
   subirImagen(){
-
- /*    if (!this.usuario.uid) {
-    console.error('UID del usuario no disponible');
-    return;
-  } */
     
     this.fileUploadService
     .actualizarFoto( this.imagenSubir, 'usuarios', this.usuario.uid|| '')

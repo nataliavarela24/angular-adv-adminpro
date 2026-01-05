@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, delay, map, tap } from 'rxjs/operators';
 
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { environment } from '../../environments/environment';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { Usuario } from '../models/usuario.model';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
+import Swal from 'sweetalert2';
 
 declare const google: any;
 declare const gapi: any;
@@ -32,8 +34,16 @@ export class UsuarioService {
   get token(): string {
     return localStorage.getItem('token') || '';
   }
-  get uid():string {
+  get uid(): string {
     return this.usuario.uid || '';
+  }
+
+  get headers() {
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    }
   }
 
   logout() {
@@ -54,7 +64,7 @@ export class UsuarioService {
     }).pipe(
       map((resp: any) => {
         console.log("resp:", resp);
-        const { email, google, img = '' , nombre, role, uid } = resp.usuario;
+        const { email, google, img = '', nombre, role, uid } = resp.usuario;
 
         this.usuario = new Usuario(
           nombre,
@@ -88,33 +98,23 @@ export class UsuarioService {
   }
 
 
-actualizarPefil(data: { email: string; nombre: string; role?: string }) {
-  data = {
-    ...data,
-    role: this.usuario.role
-  };
+  actualizarPefil(data: { email: string; nombre: string; role?: string }) {
+    data = {
+      ...data,
+      role: this.usuario.role
+    };
 
-  return this.http.put(
-    `${base_url}/usuarios/${this.uid}`,
-    data,
-    {
-      headers: {
-        'x-token': this.token
-      }
-    }
-  ).pipe(
-    catchError(err => {
-      return throwError(() => err);
-    })
-  );
-}
+    return this.http.put(
+      `${base_url}/usuarios/${this.uid}`,data, this.headers
+    );
+  }
 
   login(formData: LoginForm) {
 
     return this.http.post(`${base_url}/login`, formData)
       .pipe(
         tap((resp: any) => {
-          console.log("google resp: ",resp)
+          console.log("google resp: ", resp)
           localStorage.setItem('token', resp.token)
         })
       )
@@ -124,10 +124,43 @@ actualizarPefil(data: { email: string; nombre: string; role?: string }) {
     return this.http.post(`${base_url}/login/google`, { token })
       .pipe(
         tap((resp: any) => {
-          console.log("google resp: ",resp)
+          console.log("google resp: ", resp)
           localStorage.setItem('token', resp.token)
         })
       )
 
+  }
+
+
+  cargarUsuarios(desde: number = 0) {
+    //http://localhost:3005/api/usuarios?desde=5
+
+    const url = `${base_url}/usuarios?desde=${desde}`;
+
+    return this.http.get<CargarUsuario>(url, this.headers)
+      .pipe(
+        map(resp => {
+          const usuarios = resp.usuarios.map(user => new Usuario(user.nombre, user.email, '', user.role, user.google, user.img, user.uid))
+          console.log("uuu", usuarios)
+          return {
+            total: resp.total,
+            usuarios
+          }
+        })
+      )
+
+  }
+  eliminarUsuario(usuario: Usuario) {
+    //usuarios/68546385e349de02cf13ed02
+    const url = `${base_url}/usuarios/${usuario.uid}`;
+    return this.http.delete(url, this.headers);
+
+
+  }
+  guardarUsuario(usuario: Usuario) {
+
+    return this.http.put(
+      `${base_url}/usuarios/${ usuario.uid }`,usuario, this.headers
+    );
   }
 }
