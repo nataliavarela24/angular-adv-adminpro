@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
+
 import { Usuario } from '../../../models/usuario.model';
 import { UsuarioService } from '../../../services/usuario.service';
 import { BusquedasService } from '../../../services/busquedas.service';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
-import { Subscription } from 'rxjs';
-import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-usuarios',
