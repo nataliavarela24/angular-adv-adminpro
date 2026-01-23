@@ -34,6 +34,10 @@ export class UsuarioService {
   get token(): string {
     return localStorage.getItem('token') || '';
   }
+
+  get role(): 'ADMIN_ROLE' | 'USER_ROLE'| undefined{
+    return this.usuario.role;
+  }
   get uid(): string {
     return this.usuario.uid || '';
   }
@@ -46,8 +50,16 @@ export class UsuarioService {
     }
   }
 
+  guardarLocalStorage( token: string, menu: any){
+    localStorage.setItem('token', token);
+        localStorage.setItem('menu', JSON.stringify(menu));
+  }
+
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
+
+    //Todo: Borrar menu
 
     // Revoca el token de Google si se usó login con Google
     google.accounts.id.disableAutoSelect();
@@ -76,7 +88,8 @@ export class UsuarioService {
           uid
         );
 
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token,resp.menu);
+
         return true;
       }),
       catchError(error => {
@@ -92,7 +105,7 @@ export class UsuarioService {
     return this.http.post(`${base_url}/usuarios`, formData)
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token,resp.menu);
         })
       )
   }
@@ -115,7 +128,7 @@ export class UsuarioService {
       .pipe(
         tap((resp: any) => {
           console.log("google resp: ", resp)
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token,resp.menu);
         })
       )
   }
@@ -124,8 +137,7 @@ export class UsuarioService {
     return this.http.post(`${base_url}/login/google`, { token })
       .pipe(
         tap((resp: any) => {
-          console.log("google resp: ", resp)
-          localStorage.setItem('token', resp.token)
+         this.guardarLocalStorage(resp.token,resp.menu);
         })
       )
 

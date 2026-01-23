@@ -15,7 +15,9 @@ const base_url = environment.base_url;
 })
 export class BusquedasService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              
+  ) { }
 
   get token(): string {
     return localStorage.getItem('token') || '';
@@ -74,6 +76,12 @@ buscar(tipo: 'usuarios' | 'hospitales' | 'medicos', termino: string) {
       }
     })
   );
+}
+
+busquedaGlobal(termino: string) {
+   const url = `${base_url}/todo/${termino}`;
+
+  return this.http.get(url, this.headers);
 }
 
 }
